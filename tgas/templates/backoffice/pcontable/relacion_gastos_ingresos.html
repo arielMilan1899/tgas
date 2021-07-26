@@ -1,0 +1,253 @@
+{% extends "backoffice/base.html"%}
+
+{% block contenido_ppal%}
+<script>
+  $( function() {
+    $("#id_desde_fecha").datepicker();
+    $("#id_desde_fecha").mask("99/99/9999",{placeholder:"dd/mm/aaaa"});
+    $("#id_hasta_fecha").datepicker();
+    $("#id_hasta_fecha").mask("99/99/9999",{placeholder:"dd/mm/aaaa"});
+  } );
+</script>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-body">
+
+<div id="contador_segs"></div>
+
+        <h3> Temporada {{ a0 }} - {{ a1 }} </h3>
+
+    <form name="formppal" id="formppal" action="" method="post"
+     onsubmit="pagina_recargada(); proceso_llamado();">{% csrf_token %}
+
+
+        <table>
+            <tr>
+              <td> Temporada &nbsp; </td> <td> {{ formulario.temporada }}</td>
+              <td>&nbsp;</td>
+              <td colspan="2"><input name="aplicar_filtros" type="submit" value="Cambiar Temporada"></td>
+            </tr>
+        </table>
+
+
+
+            </div>  <!-- /.box-body -->
+          </div> <!-- /.box-primary -->
+        </div> <!-- /.col -->
+{% if seleccionar_filtros %}
+   <br/>
+{% else %}
+        <div class="col-xs-6">
+          <div class="box box-primary">
+            <div class="box-body">
+                <h4> Detalle Mensual de Gastos e Ingresos </h4>
+
+              <table id="tresumen_mes" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                  <th align="center">Mes</th>
+                  <th align="center">Gastos</th>
+                  <th align="center">Ingresos</th>
+                  <th align="center">Diferencia</th>
+                </tr>
+                </thead>
+<!--
+    # Detalle Mensual de Gastos e Ingresos  (dict de 12 meses y total)
+    parametros['d_det_mens'] = adatos.detalle_mensual_gastos_ingresos(ano=None)
+     {1: {'gastos': None, 'ingresos': None},
+     (...)
+     9: {'gastos': Decimal('560.25'), 'ingresos': Decimal('3043.50')},
+     10: {'gastos': None, 'ingresos': None},
+     11: {'gastos': None, 'ingresos': None},
+     12: {'gastos': None, 'ingresos': None},
+     'total': {'gastos': Decimal('560.25'), 'ingresos': Decimal('3043.50')}}
+-->
+                <tbody>
+  <tr> <td> Julio {{ a0 }}</td>      <td align="right"> {{ d_det_mens.7.gastos|default_if_none:'--' }} </td> <td align="right">  {{ d_det_mens.7.ingresos|default_if_none:'--' }} </td> <td align="right">   {%if d_det_mens.7.diferencia < 0 %} <font color="RED">{{ d_det_mens.7.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.7.diferencia|default_if_none:'--' }} {% endif %} </td></tr>
+  <tr> <td> Agosto {{ a0 }}</td>     <td align="right"> {{ d_det_mens.8.gastos|default_if_none:'--' }} </td> <td align="right">  {{ d_det_mens.8.ingresos|default_if_none:'--' }} </td> <td align="right">   {%if d_det_mens.8.diferencia < 0 %} <font color="RED">{{ d_det_mens.8.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.8.diferencia|default_if_none:'--' }} {% endif %} </td></tr>
+  <tr> <td> Septiembre {{ a0 }}</td> <td align="right"> {{ d_det_mens.9.gastos|default_if_none:'--' }} </td> <td align="right">  {{ d_det_mens.9.ingresos|default_if_none:'--' }} </td> <td align="right">   {%if d_det_mens.9.diferencia < 0 %} <font color="RED">{{ d_det_mens.9.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.9.diferencia|default_if_none:'--' }} {% endif %} </td></tr>
+  <tr> <td> Octubre {{ a0 }}</td>    <td align="right"> {{ d_det_mens.10.gastos|default_if_none:'--' }} </td> <td align="right"> {{ d_det_mens.10.ingresos|default_if_none:'--' }} </td> <td align="right">  {%if d_det_mens.10.diferencia < 0 %} <font color="RED">{{ d_det_mens.10.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.10.diferencia|default_if_none:'--' }} {% endif %} </td></tr>
+  <tr> <td> Noviembre {{ a0 }}</td>  <td align="right"> {{ d_det_mens.11.gastos|default_if_none:'--' }} </td> <td align="right"> {{ d_det_mens.11.ingresos|default_if_none:'--' }} </td> <td align="right">  {%if d_det_mens.11.diferencia < 0 %} <font color="RED">{{ d_det_mens.11.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.11.diferencia|default_if_none:'--' }} {% endif %} </td></tr>
+  <tr> <td> Diciembre {{ a0 }}</td>  <td align="right"> {{ d_det_mens.12.gastos|default_if_none:'--' }} </td> <td align="right"> {{ d_det_mens.12.ingresos|default_if_none:'--' }} </td> <td align="right">  {%if d_det_mens.12.diferencia < 0 %} <font color="RED">{{ d_det_mens.12.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.12.diferencia|default_if_none:'--' }} {% endif %} </td></tr>
+  <tr> <td> Enero {{ a1 }}</td>      <td align="right"> {{ d_det_mens.1.gastos|default_if_none:'--' }} </td> <td align="right">  {{ d_det_mens.1.ingresos|default_if_none:'--' }} </td> <td align="right">   {%if d_det_mens.1.diferencia < 0 %} <font color="RED">{{ d_det_mens.1.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.1.diferencia|default_if_none:'--' }} {% endif %} </td></tr>
+  <tr> <td> Febrero {{ a1 }}</td>    <td align="right"> {{ d_det_mens.2.gastos|default_if_none:'--' }} </td> <td align="right">  {{ d_det_mens.2.ingresos|default_if_none:'--' }} </td> <td align="right">   {%if d_det_mens.2.diferencia < 0 %} <font color="RED">{{ d_det_mens.2.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.2.diferencia|default_if_none:'--' }} {% endif %} </td></tr>
+  <tr> <td> Marzo {{ a1 }}</td>      <td align="right"> {{ d_det_mens.3.gastos|default_if_none:'--' }} </td> <td align="right">  {{ d_det_mens.3.ingresos|default_if_none:'--' }} </td> <td align="right">   {%if d_det_mens.3.diferencia < 0 %} <font color="RED">{{ d_det_mens.3.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.3.diferencia|default_if_none:'--' }} {% endif %} </td></tr>
+  <tr> <td> Abril {{ a1 }}</td>      <td align="right"> {{ d_det_mens.4.gastos|default_if_none:'--' }} </td> <td align="right">  {{ d_det_mens.4.ingresos|default_if_none:'--' }} </td> <td align="right">   {%if d_det_mens.4.diferencia < 0 %} <font color="RED">{{ d_det_mens.4.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.4.diferencia|default_if_none:'--' }} {% endif %} </td></tr>
+  <tr> <td> Mayo {{ a1 }}</td>       <td align="right"> {{ d_det_mens.5.gastos|default_if_none:'--' }} </td> <td align="right">  {{ d_det_mens.5.ingresos|default_if_none:'--' }} </td> <td align="right">   {%if d_det_mens.5.diferencia < 0 %} <font color="RED">{{ d_det_mens.5.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.5.diferencia|default_if_none:'--' }} {% endif %} </td></tr>
+  <tr> <td> Junio {{ a1 }}</td>      <td align="right"> {{ d_det_mens.6.gastos|default_if_none:'--' }} </td> <td align="right">  {{ d_det_mens.6.ingresos|default_if_none:'--' }} </td> <td align="right">   {%if d_det_mens.6.diferencia < 0 %} <font color="RED">{{ d_det_mens.6.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.6.diferencia|default_if_none:'--' }} {% endif %} </td></tr>
+  <tr> <td> <b>TOTAL</b> </td>  <td align="right"> <b>{{ d_det_mens.total.gastos|default_if_none:'--' }}</b> </td> <td align="right"> <b>{{ d_det_mens.total.ingresos|default_if_none:'--' }}</b> </td> <td align="right"> <b>{%if d_det_mens.total.diferencia < 0 %} <font color="RED">{{ d_det_mens.total.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.total.diferencia|default_if_none:'--' }} {% endif %} </b></td></tr>
+                </tbody>
+              </table>
+
+            </div>  <!-- /.box-body -->
+          </div> <!-- /.box-primary -->
+        </div> <!-- /.col -->
+
+
+        <div class="col-xs-6">
+          <div class="box box-primary">
+            <div class="box-body">
+                <h4> Resumen de Gastos e Ingresos </h4>
+
+              <table id="tresumen_cuenta" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                  <th align="center">Mes</th>
+                  <th align="center">Gastos</th>
+                  <th align="center">Ingresos</th>
+                  <th align="center">Diferencia</th>
+                </tr>
+                </thead>
+<!--
+
+    # Resumen de Gastos e Ingresos  (dict de n-elementos por codigo y total)
+    parametros['d_tot_por_cuenta'] = adatos.total_anual_gastos_ingresos_por_cuenta(ano=None)
+
+{'l_cuentas': [{'cuenta': <Cuenta: AMBIGUS>,
+   'diferencia': None,
+   'gastos': None,
+   'ingresos': None},
+  {'cuenta': <Cuenta: FISIO>,
+   'diferencia': Decimal('-560.25'),
+   'gastos': Decimal('560.25'),
+   'ingresos': None},
+  {'cuenta': <Cuenta: E.O. EJEMPLO>,
+   'diferencia': None,
+   'gastos': None,
+   'ingresos': None}],
+ 'total': {'diferencia': Decimal('2483.25'),
+  'gastos': Decimal('560.25'),
+  'ingresos': Decimal('3043.50')}}
+
+
+-->
+                <tbody>
+{%for cuenta in d_tot_por_cuenta.l_cuentas %}
+        <tr>
+             <td> {{cuenta.cuenta.nombre}} </td>
+             <td align="right"> {{ cuenta.gastos|default_if_none:'--' }} </td>
+             <td align="right"> {{ cuenta.ingresos|default_if_none:'--' }} </td>
+             <td align="right">
+                 {% if cuenta.diferencia < 0 %}
+                    <font color="RED"> {{ cuenta.diferencia|default_if_none:'--' }} </font>
+                 {% else %}
+                    {{ cuenta.diferencia|default_if_none:'--' }}
+                 {% endif %}
+             </td>
+        </tr>
+{% endfor %}
+        <tr>
+            <td> <b>TOTAL</b> </td>
+            <td align="right"> <b>{{ d_tot_por_cuenta.total.gastos|default_if_none:'--'}} </b> </td>
+            <td align="right"> <b>{{ d_tot_por_cuenta.total.ingresos|default_if_none:'--' }}</b> </td>
+            <td align="right">
+                {% if d_tot_por_cuenta.total.diferencia < 0 %}
+                    <font color="RED">
+                        <b>{{ d_tot_por_cuenta.total.diferencia|default_if_none:'--' }}<b>
+                    </font>
+                {% else %}
+                    <b>{{ d_tot_por_cuenta.total.diferencia|default_if_none:'--' }}<b>
+                {% endif %}
+            </td>
+        </tr>
+                </tbody>
+              </table>
+
+            </div>  <!-- /.box-body -->
+          </div> <!-- /.box-primary -->
+        </div> <!-- /.col -->
+
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-body">
+                <h3>Detalle por cada tipo de Cuenta</h3>
+
+<!----------- Para cada tipo de GASTO -------------------------------------------->
+<!--
+    # Detalle por cada tipo de Cuenta (lista con un dict por cuenta)
+    parametros['l_det_mens_por_cuenta'] = adatos.detalle_mensual_gastos_ingresos_por_cuenta(ano=None)
+
+
+    [ l_det_mens_por_cuenta
+ {1: {'gastos': None, 'ingresos': None},
+  2: {'gastos': None, 'ingresos': None},
+  3: {'gastos': None, 'ingresos': None},
+  4: {'gastos': None, 'ingresos': None},
+  5: {'gastos': None, 'ingresos': None},
+  6: {'gastos': None, 'ingresos': None},
+  7: {'gastos': None, 'ingresos': None},
+  8: {'gastos': None, 'ingresos': None},
+  9: {'gastos': None, 'ingresos': None},
+  10: {'gastos': None, 'ingresos': None},
+  11: {'gastos': None, 'ingresos': None},
+  12: {'gastos': None, 'ingresos': None},
+  'cuenta': <Cuenta: CAMPO>,
+  'total': {'gastos': None, 'ingresos': None}},
+(...)
+ {1: {'gastos': None, 'ingresos': None},
+  2: {'gastos': None, 'ingresos': None},
+  3: {'gastos': None, 'ingresos': None},
+  4: {'gastos': None, 'ingresos': None},
+  5: {'gastos': None, 'ingresos': None},
+  6: {'gastos': None, 'ingresos': None},
+  7: {'gastos': None, 'ingresos': None},
+  8: {'gastos': None, 'ingresos': None},
+  9: {'gastos': None, 'ingresos': Decimal('560.00')},
+  10: {'gastos': None, 'ingresos': None},
+  11: {'gastos': None, 'ingresos': None},
+  12: {'gastos': None, 'ingresos': None},
+  'cuenta': <Cuenta: CARNETS>,
+  'total': {'gastos': None, 'ingresos': Decimal('560.00')}}
+  ]
+
+-->
+{%for d_det_mens in l_det_mens_por_cuenta %}
+        <div class="col-xs-6">
+          <div class="box box-primary">
+            <div class="box-body">
+                <h4> {{d_det_mens.cuenta.nombre}} </h4>
+              <table id="t{{cuenta.nombre}}" class="table table-bordered table-hover">
+                <thead>
+                <tr> <th align="center">Mes</th> <th align="center">Gastos</th> <th align="center">Ingresos</th> <th align="center">Diferencia</th> </tr>
+                </thead>
+                <tbody>
+  <tr> <td> Julio {{ a0 }} </td>      <td align="right"> {{ d_det_mens.7.gastos|default_if_none:'--' }} </td> <td align="right">  {{ d_det_mens.7.ingresos|default_if_none:'--' }} </td> <td align="right">   {%if d_det_mens.7.diferencia < 0 %} <font color="RED">{{ d_det_mens.7.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.7.diferencia|default_if_none:'--' }} {% endif %} </td></tr>
+  <tr> <td> Agosto {{ a0 }}</td>     <td align="right"> {{ d_det_mens.8.gastos|default_if_none:'--' }} </td> <td align="right">  {{ d_det_mens.8.ingresos|default_if_none:'--' }} </td> <td align="right">   {%if d_det_mens.8.diferencia < 0 %} <font color="RED">{{ d_det_mens.8.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.8.diferencia|default_if_none:'--' }} {% endif %} </td></tr>
+  <tr> <td> Septiembre {{ a0 }}</td> <td align="right"> {{ d_det_mens.9.gastos|default_if_none:'--' }} </td> <td align="right">  {{ d_det_mens.9.ingresos|default_if_none:'--' }} </td> <td align="right">   {%if d_det_mens.9.diferencia < 0 %} <font color="RED">{{ d_det_mens.9.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.9.diferencia|default_if_none:'--' }} {% endif %} </td></tr>
+  <tr> <td> Octubre {{ a0 }}</td>    <td align="right"> {{ d_det_mens.10.gastos|default_if_none:'--' }} </td> <td align="right"> {{ d_det_mens.10.ingresos|default_if_none:'--' }} </td> <td align="right">  {%if d_det_mens.10.diferencia < 0 %} <font color="RED">{{ d_det_mens.10.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.10.diferencia|default_if_none:'--' }} {% endif %} </td></tr>
+  <tr> <td> Noviembre {{ a0 }}</td>  <td align="right"> {{ d_det_mens.11.gastos|default_if_none:'--' }} </td> <td align="right"> {{ d_det_mens.11.ingresos|default_if_none:'--' }} </td> <td align="right">  {%if d_det_mens.11.diferencia < 0 %} <font color="RED">{{ d_det_mens.11.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.11.diferencia|default_if_none:'--' }} {% endif %} </td></tr>
+  <tr> <td> Diciembre {{ a0 }}</td>  <td align="right"> {{ d_det_mens.12.gastos|default_if_none:'--' }} </td> <td align="right"> {{ d_det_mens.12.ingresos|default_if_none:'--' }} </td> <td align="right">  {%if d_det_mens.12.diferencia < 0 %} <font color="RED">{{ d_det_mens.12.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.12.diferencia|default_if_none:'--' }} {% endif %} </td></tr>
+  <tr> <td> Enero {{ a1 }}</td>      <td align="right"> {{ d_det_mens.1.gastos|default_if_none:'--' }} </td> <td align="right">  {{ d_det_mens.1.ingresos|default_if_none:'--' }} </td> <td align="right">   {%if d_det_mens.1.diferencia < 0 %} <font color="RED">{{ d_det_mens.1.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.1.diferencia|default_if_none:'--' }} {% endif %} </td></tr>
+  <tr> <td> Febrero {{ a1 }}</td>    <td align="right"> {{ d_det_mens.2.gastos|default_if_none:'--' }} </td> <td align="right">  {{ d_det_mens.2.ingresos|default_if_none:'--' }} </td> <td align="right">   {%if d_det_mens.2.diferencia < 0 %} <font color="RED">{{ d_det_mens.2.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.2.diferencia|default_if_none:'--' }} {% endif %} </td></tr>
+  <tr> <td> Marzo {{ a1 }}</td>      <td align="right"> {{ d_det_mens.3.gastos|default_if_none:'--' }} </td> <td align="right">  {{ d_det_mens.3.ingresos|default_if_none:'--' }} </td> <td align="right">   {%if d_det_mens.3.diferencia < 0 %} <font color="RED">{{ d_det_mens.3.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.3.diferencia|default_if_none:'--' }} {% endif %} </td></tr>
+  <tr> <td> Abril {{ a1 }}</td>      <td align="right"> {{ d_det_mens.4.gastos|default_if_none:'--' }} </td> <td align="right">  {{ d_det_mens.4.ingresos|default_if_none:'--' }} </td> <td align="right">   {%if d_det_mens.4.diferencia < 0 %} <font color="RED">{{ d_det_mens.4.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.4.diferencia|default_if_none:'--' }} {% endif %} </td></tr>
+  <tr> <td> Mayo {{ a1 }}</td>       <td align="right"> {{ d_det_mens.5.gastos|default_if_none:'--' }} </td> <td align="right">  {{ d_det_mens.5.ingresos|default_if_none:'--' }} </td> <td align="right">   {%if d_det_mens.5.diferencia < 0 %} <font color="RED">{{ d_det_mens.5.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.5.diferencia|default_if_none:'--' }} {% endif %} </td></tr>
+  <tr> <td> Junio {{ a1 }}</td>      <td align="right"> {{ d_det_mens.6.gastos|default_if_none:'--' }} </td> <td align="right">  {{ d_det_mens.6.ingresos|default_if_none:'--' }} </td> <td align="right">   {%if d_det_mens.6.diferencia < 0 %} <font color="RED">{{ d_det_mens.6.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.6.diferencia|default_if_none:'--' }} {% endif %} </td></tr>
+  <tr> <td> <b>TOTAL</b> </td>  <td align="right"> <b>{{ d_det_mens.total.gastos|default_if_none:'--' }}</b> </td> <td align="right"> <b>{{ d_det_mens.total.ingresos|default_if_none:'--' }}</b> </td> <td align="right"> <b>{%if d_det_mens.total.diferencia < 0 %} <font color="RED">{{ d_det_mens.total.diferencia|default_if_none:'--' }}</font> {% else %}  {{ d_det_mens.total.diferencia|default_if_none:'--' }} {% endif %} </b></td></tr>
+                </tbody>
+              </table>
+
+            </div>  <!-- /.box-body -->
+          </div> <!-- /.box-primary -->
+        </div> <!-- /.col -->
+
+{%endfor%}
+            </div>  <!-- /.box-body -->
+          </div> <!-- /.box-primary -->
+        </div> <!-- /.col -->
+
+{% endif %}
+
+   <!--         </div> <!-- /.box-body -->
+   <!--       </div> <!-- /.box -->
+   <!--     </div> <!-- /.col -->
+
+      </div> <!-- /.row -->
+    </section> <!-- /.content -->
+
+{% endblock%}
+

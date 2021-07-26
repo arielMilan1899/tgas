@@ -1,0 +1,89 @@
+{% extends "backoffice/base.html"%}
+
+{% block contenido_ppal%}
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="col-xs-12">
+
+          <div class="box">
+            <div class="box-body">
+<!--------------------------------------------- Facturas Insertados ---------------------------------------->
+<script>
+    $(document).ready(function() {
+        $("#tfacturas").DataTable({
+            "language": {
+                "url": "/static/backoffice/plugins/datatables/plug-ins/1.10.13/i18n/Spanish.json"
+                    },
+            "order": [[ 0, "asc" ]],
+            "bPaginate": true,
+            "bFilter": true,
+            "bInfo": true,
+            "columnDefs": [
+                { className: "text-left", "targets": [0,2,3] },
+                { className: "text-right", "targets": [] },
+                { className: "text-center", "targets": [1,4] },
+                ],
+        });
+      }
+    );
+</script>
+<!--
+
+            d = {'cif': dato['cif'], 'razon_social': titular.razon_social,
+                 'email_anterior': titular.email, 'email_actualizado': dato['email']}
+
+-->
+<div class="callout callout-success">
+    <h4>Se han actualizado los siguientes emails:</h4>
+              <table id="tfacturas" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                  <th>Titular</th>
+                  <th>CIF</th>
+                  <th>email actualizado</th>
+                  <th>email anterior</th>
+                  <th>campo</th>
+                </tr>
+                </thead>
+                <tbody>
+{% for dato in l_actualizados %}
+                <tr>
+                    <td> {{ dato.razon_social }} </td>
+                    <td> {{ dato.cif }} </td>
+                    <td> {{ dato.email_actualizado }}</td>
+                    <td> <i>{{ dato.email_anterior|default_if_none:'--' }}</i></td>
+                    <td> {{ dato.campo_email }}</td>
+                </tr>
+{%endfor%}
+
+                </tbody>
+              </table>
+</div>
+
+<!--------------------------------------------- Errores Encontrados ---------------------------------------->
+
+
+            </div> <!-- /.box-body -->
+          </div> <!-- /.box -->
+          <div class="box">
+            <div class="box-body">
+{% if l_errores %}
+     <pre> { l_errores } </pre>
+{% else %}
+    <h4>No se han producido errores en el proceso</h4>
+{% endif %}
+
+
+            </div> <!-- /.box-body -->
+          </div> <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+
+
+{% endblock%}

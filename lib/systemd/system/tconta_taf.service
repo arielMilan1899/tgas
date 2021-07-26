@@ -1,0 +1,26 @@
+# /lib/systemd/system/tgas_daemon.service
+#
+
+[Unit]
+Description=Telefactura server
+After=rc.local.service udev.service mountkernfs.service postgresql.service
+
+[Service]
+Type=simple
+User=root
+# Corre en el puerto 1234
+ExecStart=/bin/sh -c "/opt/telemap/tgas/manage.py runserver 0.0.0.0:1234 2>> /var/log/tgas_p1234.log"
+ExecStop=/bin/sh -c "kill -9 `ps auxwww | grep manage.py| grep :1234 | head -1 | awk '{print $2}'`"
+KillSignal=SIGHUP
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+# systemctl --system daemon-reload
+# systemctl enable tgas_daemon.service
+# systemctl start tgas_daemon.service
+# systemctl status tgas_daemon.service
+# systemctl stop tgas_daemon.service
+# systemctl status tgas_daemon.service
+

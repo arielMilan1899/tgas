@@ -1,0 +1,92 @@
+{% extends "backoffice/base.html"%}
+
+{% block contenido_ppal%}
+<script>
+    $(document).ready(function () {
+            var es_admin = '{{usuario.es_admin}}';
+            $("#trepostajes").DataTable({
+                "language": {
+                    "url": "/static/backoffice/plugins/datatables/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "order": [[0, "asc"]],
+                "bPaginate": true,
+                "bFilter": true,
+                "bInfo": false,
+                "columnDefs": [
+                    {className: "text-left", "targets": [0, 1]},
+                    {className: "text-right", "targets": es_admin === 'True' ? [5, 6, 7] : [4, 5, 6]},
+                    {className: "text-center", "targets": es_admin === 'True' ? [8] : [7]},
+                    {targets: es_admin === 'True' ? [5, 6, 7] : [4, 5, 6], type: 'moneda'},
+                ],
+                "fnInitComplete": function (oSettings) {
+                    if (es_admin === 'True') {
+                        $('.dataTables_filter').each(function () {
+                            $(this).append('&nbsp;<a class="btn btn-social-icon btn-linkedin" data-toggle="tooltip" title="Añadir datos" href="add"><i class="fa fa-plus"></i></a>&nbsp;<a class="btn btn-social-icon btn-linkedin" data-toggle="tooltip" title="Exportar a Excel" href="#"><i class="fa fa-file-excel-o"></i></a>');
+                        });
+                    }
+                },
+            });
+        }
+    );
+</script>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-body" style="overflow:auto">
+                    <form name="formppal" id="formppal" action="" method="post"
+                          onsubmit="pagina_recargada(); proceso_llamado();">{% csrf_token %}
+                        <p align="center"> {{ formulario.mes }} {{ formulario.ano }} </p>
+                        {% if not usuario.es_admin %}
+                        <p align="center"> {{ formulario.matricula }} </p>
+                        {% endif %}
+                    </form>
+                    <table id="trepostajes" class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Estación</th>
+                            {% if usuario.es_admin %}
+                            <th>Usuario</th>
+                            {% endif %}
+                            <th>Matrícula</th>
+                            <th>Combustible</th>
+                            <th>Litros</th>
+                            <th>Precio</th>
+                            <th>Importe</th>
+                            <th>Albarán</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for dato in repostajes%}
+                        <tr>
+                            {% if usuario.es_admin %}
+                            <td><a href="/repostajes/edit/?dato_id={{ dato.id }}"> {{ dato.fecha_creacion|date:"D d" }} a las {{ dato.fecha_creacion|time:"H:i" }} </a></td>
+                            <td><a href="/estaciones/edit/?dato_id={{ dato.estacion.id }}"> {{ dato.estacion.nombre }} </a></td>
+                            <td><a href="/usuarios/edit/?dato_id={{ dato.usuario.id }}"> {{ dato.usuario.nombre }} </a></td>
+                            {% else %}
+                            <td> {{ dato.fecha_creacion|date:"D d" }} a las {{ dato.fecha_creacion|time:"H:i" }}</td>
+                            <td><a href="/estaciones/ver/?dato_id={{ dato.estacion.id }}"> {{ dato.estacion.nombre }} </a></td>
+                            {% endif %}
+                            <td> {{ dato.matricula.codigo }}</td>
+                            <td> {{ dato.combustible|title }}</td>
+                            <td> {{ dato.litros }}</td>
+                            <td> {{ dato.precio }}</td>
+                            <td> {{ dato.importe }}</td>
+                            <td> {{ dato.albaran }}</td>
+                        </tr>
+                        {%endfor%}
+                        </tbody>
+                    </table>
+                </div>            <!-- /.box-body -->
+            </div>          <!-- /.box -->
+        </div>        <!-- /.col -->
+    </div>      <!-- /.row -->
+</section>    <!-- /.content -->
+
+
+{% endblock%}
+    
+    

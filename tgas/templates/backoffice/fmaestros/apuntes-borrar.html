@@ -1,0 +1,79 @@
+{% extends "backoffice/base.html"%}
+
+{% block contenido_ppal%}
+
+    <!-- Main content -->
+    <section class="content">
+
+	<form id="form1" action="" method="post">{% csrf_token %}
+        <input type="hidden" name="dato_id" value="{{ dato_id }}">
+
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box box-primary">
+            <div class="box-body">
+
+{% if ya_eliminado %}
+              <div class="callout callout-success">
+                <h4>{{ titulo_clase }} borrado!</h4>
+<!--
+    fecha = models.DateField()
+    descripcion = models.CharField(max_length=60)
+    importe = models.DecimalField(max_digits=12, decimal_places=2)
+    es_gasto = models.BooleanField()
+    cuenta = models.ForeignKey(Cuenta)
+
+-->
+    <table><tbody>
+    <tr><th> Fecha: </th><td>&nbsp;</td>       <td>{{ dato.fecha|date:'d/m/Y' }}</td> </tr>
+    <tr><th> Descripción: </th><td>&nbsp;</td> <td>{{ dato.descripcion }}</td> </tr>
+    <tr><th> Cuenta: </th><td>&nbsp;</td> <td>{{ dato.cuenta }}</td> </tr>
+    <tr><th> Importe: </th><td>&nbsp;</td><td>{{ dato.importe }}</td> </tr>
+    <tr><th> Tipo: </th><td>&nbsp;</td>   <td>{{ dato.es_gasto|yesno:"Gasto,Ingreso,--" }}</td> </tr>
+    </tbody></table>
+              </div>
+{% else %}
+             <div class="callout callout-danger">
+                <h4>Se va a borrar el siguiente {{ titulo_clase }}:</h4>
+    <table><tbody>
+    <tr><th> Fecha: </th><td>&nbsp;</td>       <td>{{ dato.fecha|date:'d/m/Y' }}</td> </tr>
+    <tr><th> Descripción: </th><td>&nbsp;</td> <td>{{ dato.descripcion }}</td> </tr>
+    <tr><th> Cuenta: </th><td>&nbsp;</td> <td>{{ dato.cuenta }}</td> </tr>
+    <tr><th> Importe: </th><td>&nbsp;</td><td>{{ dato.importe }}</td> </tr>
+    <tr><th> Tipo: </th><td>&nbsp;</td>   <td>{{ dato.es_gasto|yesno:"Gasto,Ingreso,--" }}</td> </tr>
+    </tbody></table>
+              </div>
+{% endif %}
+            </div>  <!-- /.box-body -->
+          </div> <!-- /.box-primary -->
+
+
+          <!--<div class="box">-->
+            <div class="box-body">
+
+
+{% if ya_eliminado %}
+        <input name="borrado_finalizado" type="submit" value="Aceptar">
+{% else %}
+     <input name="confirmar_borrado" type="submit" value="Eliminar">
+     <input name="cancelar" type="submit" value="Cancelar">
+     <input name="vengo_desde" type="hidden" value="{{ vengo_desde }}">
+
+{% endif %}
+<!-- ----- fin botones de Aceptar -->
+	</form>
+            </div>
+            <!-- /.box-body -->
+          </div>
+
+          <!-- /.box -->
+        <!--</div>-->
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+
+
+{% endblock%}
+

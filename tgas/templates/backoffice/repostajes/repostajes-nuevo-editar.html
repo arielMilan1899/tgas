@@ -1,0 +1,87 @@
+{% extends "backoffice/base.html"%}
+
+{% block contenido_ppal%}
+
+<!-- Main content -->
+<section class="content">
+
+    <form id="form1" action="" method="post">{% csrf_token %}
+        <input type="hidden" name="dato_id" value="{{ dato_id }}">
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-primary">
+                    <div class="box-body" style="overflow:auto">
+                        <table>
+                            <tbody>
+                            <td id="datos-izquierda">
+                                <table class="uifmaestros">
+                                    <tbody>
+                                    <tr>
+                                        <td>Usuario: </td>
+                                        <td>
+                                            <p>{{ formulario.usuario }}</p>
+                                            <h6>{% for error in formulario.usuario.errors %}
+                                                <span style="color:red">{{ error|escape }}</span>{% endfor %}</h6>
+                                        </td>
+                                        <td>
+                                            <p>{{ formulario.matricula }}</p>
+                                            <h6>{% for error in formulario.matricula.errors %}
+                                                <span style="color:red">{{ error|escape }}</span>{% endfor %}</h6>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Estación:</td>
+                                        <td>
+                                            <p>{{ formulario.estacion }}</p>
+                                            <h6>{% for error in formulario.estacion.errors %}
+                                                <span style="color:red">{{ error|escape }}</span>{% endfor %}</h6>
+                                        </td>
+                                        <td>
+                                            <p>{{ formulario.combustible }}</p>
+                                            <h6>{% for error in formulario.combustible.errors %}
+                                                <span style="color:red">{{ error|escape }}</span>{% endfor %}</h6>
+                                        </td>
+                                        <td>
+                                            <p>{{ formulario.precio_combustible }} €</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Albarán:</td>
+                                        <td>
+                                            {{ formulario.albaran }}
+                                            <h6>{% for error in formulario.albaran.errors %}
+                                                <span style="color:red">{{ error|escape }}</span>{% endfor %}</h6>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Litros:</td>
+                                        <td>
+                                            {{ formulario.litros }}
+                                            <h6>{% for error in formulario.litros.errors %}
+                                                <span style="color:red">{{ error|escape }}</span>{% endfor %}</h6>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Importe:</td>
+                                        <td>
+                                            {{ formulario.importe }} €
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            </tbody>
+                        </table>
+                    </div> <!-- /.box-body -->
+                </div>         <!-- /.box -->
+                {{ barra_botones|safe }}
+            </div>        <!-- /.col -->
+        </div>      <!-- /.row -->
+    </form>
+</section>    <!-- /.content -->
+
+
+{% endblock%}
+    
+    

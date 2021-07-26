@@ -1,0 +1,126 @@
+{% extends "backoffice/base.html"%}
+
+{% block contenido_ppal%}
+<script>
+    $(document).ready(function () {
+            $("#consumo-por-mes").DataTable({
+                "language": {
+                    "url": "/static/backoffice/plugins/datatables/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "bPaginate": false,
+                "bFilter": false,
+                "bInfo": false,
+                "sort": false,
+                "columnDefs": [
+                    {className: "text-left", "targets": [0]},
+                    {className: "text-right", "targets": [2, 1]},
+                    {className: "text-center", "targets": []},
+                    {targets: [1, 2], type: 'moneda'}
+                ]
+            });
+        }
+    );
+</script>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-primary">
+
+                <div class="box-body" style="overflow:auto">
+                    <form name="formppal" method="post" onsubmit="pagina_recargada(); proceso_llamado();">{% csrf_token %}
+                        <p align="center"> {{ formulario.ano }} </p>
+                        <p align="center"> {{ formulario.estacion }} </p>
+                        <p align="center"> {{ formulario.combustible }} </p>
+                        {% if not usuario.es_admin %}
+                        <p align="center"> {{ formulario.matricula }} </p>
+                        {% endif %}
+                    </form>
+                    <h4> Consumo {{titulo}} por mes </h4>
+                    <table id="consumo-por-mes" class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>Mes</th>
+                            <th>Litros</th>
+                            <th>Importe</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Enero</td>
+                            <td>{{resumen.1.litros}}</td>
+                            <td>{{resumen.1.importe}}</td>
+                        </tr>
+                        <tr>
+                            <td>Febrero</td>
+                            <td>{{resumen.2.litros}}</td>
+                            <td>{{resumen.2.importe}}</td>
+                        </tr>
+                        <tr>
+                            <td>Marzo</td>
+                            <td>{{resumen.3.litros}}</td>
+                            <td>{{resumen.3.importe}}</td>
+                        </tr>
+                        <tr>
+                            <td>Abril</td>
+                            <td>{{resumen.4.litros}}</td>
+                            <td>{{resumen.4.importe}}</td>
+                        </tr>
+                        <tr>
+                            <td>Mayo</td>
+                            <td>{{resumen.5.litros}}</td>
+                            <td>{{resumen.5.importe}}</td>
+                        </tr>
+                        <tr>
+                            <td>Junio</td>
+                            <td>{{resumen.6.litros}}</td>
+                            <td>{{resumen.6.importe}}</td>
+                        </tr>
+                        <tr>
+                            <td>Julio</td>
+                            <td>{{resumen.7.litros}}</td>
+                            <td>{{resumen.7.importe}}</td>
+                        </tr>
+                        <tr>
+                            <td>Agosto</td>
+                            <td>{{resumen.8.litros}}</td>
+                            <td>{{resumen.8.importe}}</td>
+                        </tr>
+                        <tr>
+                            <td>Septiembre</td>
+                            <td>{{resumen.9.litros}}</td>
+                            <td>{{resumen.9.importe}}</td>
+                        </tr>
+                        <tr>
+                            <td>Octubre</td>
+                            <td>{{resumen.10.litros}}</td>
+                            <td>{{resumen.10.importe}}</td>
+                        </tr>
+                        <tr>
+                            <td>Noviembre</td>
+                            <td>{{resumen.11.litros}}</td>
+                            <td>{{resumen.11.importe}}</td>
+                        </tr>
+                        <tr>
+                            <td>Diciembre</td>
+                            <td>{{resumen.12.litros}}</td>
+                            <td>{{resumen.12.importe}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Total</b></td>
+                            <td><b>{{resumen.total.litros}}lts</b></td>
+                            <td><b>{{resumen.total.importe}}€ </b></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>    <!-- /.content -->
+
+
+{% endblock%}
+    
+    

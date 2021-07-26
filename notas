@@ -1,0 +1,2 @@
+boton para abrir GMaps y genere una camino entre un punto y otro:
+<a class="btn btn-primary" href="https://www.google.com/maps/dir/?api=1&origin={{ dato.posicion_gmaps }}&destination={{ dato.posicion_gmaps }}&travelmode=driving" role="button">Ver en GMaps</a>

@@ -1,0 +1,44 @@
+{% extends "backoffice/base.html"%}
+
+{% block contenido_ppal%}
+
+<!-- Main content -->
+<section class="content">
+
+    <form id="form1" action="" method="post">{% csrf_token %}
+        <input type="hidden" name="dato_id" value="{{ dato_id }}">
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-primary">
+                    <div class="box-body" style="overflow:auto">
+                        <table class="uifmaestros">
+                            <tbody>
+                            <tr>
+                                <td>Código:</td>
+                                <td>
+                                    <p>{{ formulario.codigo }}</p>
+                                    <h6>{% for error in formulario.codigo.errors %}<span style="color:red">{{ error|escape }}</span>{% endfor %}</h6>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Nombre:</td>
+                                <td>
+                                    <p>{{ formulario.nombre }}</p>
+                                    <h6>{% for error in formulario.nombre.errors %}<span style="color:red">{{ error|escape }}</span>{% endfor %}</h6>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div> <!-- /.box-body -->
+                </div>         <!-- /.box -->
+                {{ barra_botones|safe }}
+            </div>        <!-- /.col -->
+        </div>      <!-- /.row -->
+    </form>
+</section>    <!-- /.content -->
+
+
+{% endblock%}
+    
+    

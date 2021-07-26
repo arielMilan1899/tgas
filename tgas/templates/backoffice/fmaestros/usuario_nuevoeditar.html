@@ -1,0 +1,107 @@
+{% extends "backoffice/base.html"%}
+
+{% block contenido_ppal%}
+{% load app_filters %}
+
+    <!-- Main content -->
+    <section class="content">
+
+	<form id="form1" action="" method="post">{% csrf_token %}
+        <input type="hidden" name="dato_id" value="{{ dato_id }}">
+
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box box-primary">
+            <div class="box-body" style="overflow:auto">
+    <table class="uifmaestros"><tbody>
+    <tr><td> Usuario: </td><td>&nbsp;</td>
+        <td>{{ formulario.username }}</td>
+        <td>{% for error in formulario.username.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</td>
+    <td>  Nombre: </td><td>&nbsp;</td>
+        <td>{{ formulario.nombre }}</td>
+        <td>{% for error in formulario.nombre.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</td>
+    </tr>
+    <td>  NIF: </td><td>&nbsp;</td>
+        <td>{{ formulario.nif }}</td>
+        <td>{% for error in formulario.nif.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</td>
+    </tr>
+    </tbody></table>
+            </div>  <!-- /.box-body -->
+          </div> <!-- /.box-primary -->
+          <div class="box box-primary">
+            <div class="box-body" style="overflow:auto">
+    <table class="uifmaestros">
+        <tbody>
+    <tr><th>  Apellidos: </th><td>&nbsp;</td>
+        <td>{{ formulario.apellidos }}</td>
+        <td>{% for error in formulario.apellidos.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</td>
+    </tr>
+    <tr><th>  Email: </th><td>&nbsp;</td>
+        <td>{{ formulario.email }}</td>
+        <td>{% for error in formulario.email.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</td>
+    </tr>
+     <tr><th>  Teléfono: </th><td>&nbsp;</td>
+        <td>{{ formulario.telefono }}</td>
+        <td>{% for error in formulario.telefono.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</td>
+    </tr>
+    <tr><th>  Localidad: </th><td>&nbsp;</td>
+        <td>{{ formulario.localidad }}</td>
+        <td>{% for error in formulario.localidad.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</td>
+    </tr>
+    <tr><th>  Provincia: </th><td>&nbsp;</td>
+        <td>{{ formulario.provincia }}</td>
+        <td>{% for error in formulario.provincia.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</td>
+    </tr>
+    <tr><th>  Dirección: </th><td>&nbsp;</td>
+        <td>{{ formulario.direccion }}</td>
+        <td>{% for error in formulario.direccion.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</td>
+    </tr>
+      <tr><th>  Código postal: </th><td>&nbsp;</td>
+        <td>{{ formulario.codigo_postal }}</td>
+        <td>{% for error in formulario.codigo_postal.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</td>
+    </tr>
+    <tr><th>  Matrículas: </th><td>&nbsp;</td>
+          <td><p>{{ formulario.instance.matriculas }}<p>
+              {% if not modo_sololectura %}
+              <small>{{ formulario.nueva_matricula }}</small>
+              {% endif %}
+          </td>
+        <td>{% for error in formulario.nueva_matricula.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</td>
+    </tr>
+    <tr><th>  Observaciones: </th><td>&nbsp;</td>
+        <td>{{ formulario.observaciones }}</td>
+        <td>{% for error in formulario.observaciones.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</td>
+    </tr>
+    <tr><th>  Acceso permitido: </th><td>&nbsp;</td>
+        <td>{{ formulario.esta_activo }}</td>
+        <td>{% for error in formulario.esta_activo.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</td>
+    </tr>
+    <tr><th>  Es SuperAdmin: </th><td>&nbsp;</td>
+        <td>{{ formulario.es_admin }}</td>
+        <td>{% for error in formulario.es_admin.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</td>
+    </tr>
+        <tr><th>  Facturación mensual: </th><td>&nbsp;</td>
+            <td>{{ formulario.factura_mensual }}</td>
+        <td>{% for error in formulario.es_admin.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</td>
+    </tr>
+
+    </tbody></table>
+            </div>
+	</form>
+            </div>
+
+            {{ barra_botones|safe }} &nbsp;&nbsp;
+            <a class="btn btn-primary" href="/usuarios/reestablece_password?user_id={{dato_id}}" role="button">Reestablecer Password</a>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        <!--</div>-->
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+
+
+{% endblock%}
+

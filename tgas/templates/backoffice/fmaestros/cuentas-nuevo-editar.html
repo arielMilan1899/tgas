@@ -1,0 +1,84 @@
+{% extends "backoffice/base.html"%}
+
+{% block contenido_ppal%}
+
+<script>
+  $( function() {
+    $("#id_fecha_paso_historico").datepicker();
+    $("#id_fecha_paso_historico").mask("99/99/9999",{placeholder:"dd/mm/aaaa"});
+    $("#id_hora_paso_historico").mask("99:99",{placeholder:"hh:mm"});
+
+  } );
+</script>
+
+    <!-- Main content -->
+    <section class="content">
+
+	<form id="form1" action="" method="post">{% csrf_token %}
+        <input type="hidden" name="dato_id" value="{{ dato_id }}">
+
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box box-primary">
+            <div class="box-body">
+    <table class="uifmaestros"><tbody>
+    <tr><td> Código: </td>
+        <td>{{ formulario.codigo }}</td>
+        <td>{% for error in formulario.codigo.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</td>
+    <td>  Nombre: </td>
+        <td>{{ formulario.nombre }}</td>
+        <td>{% for error in formulario.nombre.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</td>
+    </tr>
+    </tbody></table>
+
+                <br/><br/>
+<!--
+    cp = models.CharField(max_length=11, null=True, blank=True)
+    direccion =  models.CharField(max_length=70, null=True, blank=True)
+    poblacion = models.CharField(max_length=70, null=True, blank=True)
+    provincia = models.CharField(max_length=70, null=True, blank=True)
+    telefono = models.CharField(max_length=70, null=True, blank=True)
+
+-->
+
+    <table> <tbody>
+<tr valign="top"><td> <table class="uifmaestros"> <tbody>
+<!----- Grupo de datos de la izquierda ---->
+
+&nbsp;
+<!----- FIN Grupo de datos de la izquierda ---->
+</tbody></table></td>
+<td> &nbsp; &nbsp; &nbsp; </td>
+<td> <table class="uifmaestros"> <tbody>
+<!----- Grupo de datos de la derecha ---->
+
+
+    <tr><td>  Observaciones </td><td>&nbsp;</td>
+        <td>{{ formulario.observaciones }}</td>
+        <td>{% for error in formulario.observaciones.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</td>
+    </tr>
+    <tr><td>  Fecha Paso Historico </td><td>&nbsp;</td>
+        <td>{{ formulario.fecha_paso_historico }} &nbsp; &nbsp; &nbsp;{{ formulario.hora_paso_historico }}</td>
+        <td>{% for error in formulario.fecha_paso_historico.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}
+            {% for error in formulario.hora_paso_historico.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}
+        </td>
+    </tr>
+<!----- FIN Grupo de datos de la derecha ---->
+</tbody></table></td></tr>
+    </tbody></table>
+
+
+	</form>
+
+            </div> <!-- /.box-body -->
+          </div>         <!-- /.box -->
+            {{ barra_botones|safe }}
+
+
+        </div>        <!-- /.col -->
+      </div>      <!-- /.row -->
+    </section>    <!-- /.content -->
+
+
+{% endblock%}
+

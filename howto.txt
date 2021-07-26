@@ -1,0 +1,54 @@
+
+Puesta en marcha de la app tgas en desarrollo:
+=====================================================
+
+
+1.- Creación del fichero de base de datos y del superusuario:
+
+  root@superkol:~/tgas# ./manage.py migrate
+       Operations to perform:
+         Apply all migrations: admin, auth, contenttypes, fmaestros, sessions, usuarios
+       Running migrations:
+         Applying contenttypes.0001_initial... OK
+         (...)
+
+
+  root@superkol:~/tgas# ./manage.py createsuperuser
+
+    usuario: root  password: Tele2021
+
+
+
+2.- Añadir datos básicos a la aplicación (usuarios y cuentas):
+  root@superkol:~/tgas# ./manage.py shell
+In [1]: from docs import inserta_iniciales
+In [2]: inserta_iniciales.inserta_usuarios()
+In [3]: inserta_iniciales.inserta_cuentas()
+
+
+3.- Iniciar el server django para desarrollo:
+    root@superkol:~/tgas# ./manage.py runserver
+
+
+4.- Acceder a la aplicacion:
+    http://localhost:8000/      [usuario: jose   pass: 1111]
+
+
+
+NOTA 1: Las plantillas de las nuevas apps van en:
+    ./tgas/tgas/templates/backoffice/nueva_app/
+
+
+NOTA 2: Utilidades Plataforma:
+
+ ./crea_adminpy.py: crea el fichero admin.py en cada APP para acceder
+        a los datos desde Django Admin
+
+ ./borra_todas_migrations.py: elimina todos los ficheros de migrations
+        en cada APP
+
+ ./crea_prototipo_fmaestros.py: crea una estructura básica para una
+        Clase: altas, bajas, modificaciones y consultas
+
+ ./crea_telemap_css.py: modifica el CSS donde van definidos los colores
+        de la barra lateral, de las cabeceras, etc.

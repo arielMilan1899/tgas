@@ -1,0 +1,101 @@
+{% extends "backoffice/base.html"%}
+
+{% block contenido_ppal%}
+<script>
+    $(document).ready(function () {
+            $("#testaciones").DataTable({
+                "language": {
+                    "url": "/static/backoffice/plugins/datatables/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "order": [[0, "asc"]],
+                "bPaginate": true,
+                "bFilter": true,
+                "bInfo": true,
+                "columnDefs": [
+                    {className: "text-left", "targets": [0, 1]},
+                    {className: "text-right", "targets": []},
+                    {className: "text-center", "targets": []},
+                ],
+            });
+        }
+    );
+</script>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-body" style="overflow:auto">
+                    <form id="form1" action="" method="post">{% csrf_token %}
+                        <input type="hidden" name="dato_id" value="{{ dato_id }}">
+                        <table class="uifmaestros">
+                            <tbody>
+                            <tr>
+                                <td> Código:</td>
+                                <td>{{ formulario.codigo }}</td>
+                                <td>{% for error in formulario.codigo.errors %}<p style="color:red"> &nbsp;{{error|escape }}</p>{% endfor %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td> Nombre:</td>
+                                <td>{{ formulario.nombre }}</td>
+                                <td>{% for error in formulario.nombre.errors %}<p style="color:red"> &nbsp;{{error|escape }}</p>{% endfor %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td> Comunidad autónoma:</td>
+                                <td>{{ formulario.ccaa }}</td>
+                                <td>{% for error in formulario.observaciones.errors %}<p style="color:red">&nbsp; {{error|escape }}</p>{% endfor %}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        {{ barra_botones|safe }}
+                    </form>
+                    {% if modo_sololectura %}
+                    &nbsp;
+                    <table id="testaciones" class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Estación</th>
+                            {% for combustibles in formulario.combustibles %}
+                            <th>{{combustibles.nombre|title}}</th>
+                            {% endfor %}
+                            <th>Ver en mapa</th>
+                            <th>Google Maps</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for dato in formulario.instance.estacion_set.all %}
+                        <tr>
+                            <td><a href="/estaciones/edit/?dato_id={{ dato.id }}">{{ dato.codigo }}</a></td>
+                            <td> {{ dato.nombre }}</td>
+                            {% for precio in dato.precios %}
+                            <td>{{precio}}</td>
+                            {% endfor %}
+                            <td>
+                                <a class="btn btn-primary" href="/estaciones/ver_mapa?dato_id={{ dato.id }}"
+                                   role="button">Ver en Mapa</a>
+                            </td>
+                            <td>
+                                <a class="btn btn-primary"
+                                   href="https://maps.google.com/maps?q={{ dato.posicion_gmaps }}&ll={{ dato.posicion_gmaps }}&z=17"
+                                   role="button">Ver en Google Maps</a>
+                            </td>
+                        </tr>
+                        {%endfor%}
+                        </tbody>
+                    </table>
+                    {%endif%}
+                </div>            <!-- /.box-body -->
+            </div>          <!-- /.box -->
+        </div>        <!-- /.col -->
+    </div>      <!-- /.row -->
+</section>    <!-- /.content -->
+
+
+{% endblock%}
+    
+    

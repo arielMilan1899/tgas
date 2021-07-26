@@ -1,0 +1,185 @@
+{% extends "backoffice/base.html"%}
+
+{% block contenido_ppal%}
+{% load app_filters %}
+
+<!-- Main content -->
+<section class="content">
+
+    <form id="form1" action="" method="post">{% csrf_token %}
+        <input type="hidden" name="dato_id" value="{{ dato_id }}">
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-primary">
+                    <div class="box-body" style="overflow:auto">
+                        <table class="uifmaestros">
+                            <tbody>
+                            <tr>
+                                <td> Usuario:</td>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <p>{{ formulario.username }}</p>
+                                    <h6>{% for error in formulario.username.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</h6>
+                                </td>
+                                <td> Nombre:</td>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <p>{{ formulario.nombre }}</p>
+                                    <h6>{% for error in formulario.nombre.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</h6>
+                                </td>
+                                <td> NIF:</td>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <p>{{ formulario.nif }}</p>
+                                    <h6>{% for error in formulario.nif.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</h6>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>  <!-- /.box-body -->
+                </div> <!-- /.box-primary -->
+                <div class="box box-primary">
+                    <div class="box-body" style="overflow:auto">
+                        <table class="uifmaestros">
+                            <tbody>
+                            <tr>
+                                <th> Apellidos:</th>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <p>{{ formulario.apellidos }}</p>
+                                    <h6>{% for error in formulario.apellidos.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</h6>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th> Email:</th>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <p>{{ formulario.email }}</p>
+                                    <h6>{% for error in formulario.email.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</h6>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th> Teléfono:</th>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <p>{{ formulario.telefono }}</p>
+                                    <h6>{% for error in formulario.telefono.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</h6>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th> Localidad:</th>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <p>{{ formulario.localidad }}</p>
+                                    <h6>{% for error in formulario.localidad.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</h6>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th> Provincia:</th>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <p>{{ formulario.provincia }}</p>
+                                    <h6>{% for error in formulario.provincia.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</h6>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th> Dirección:</th>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <p>{{ formulario.direccion }}</p>
+                                    <h6>{% for error in formulario.direccion.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</h6>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th> Código postal:</th>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <p>{{ formulario.codigo_postal }}</p>
+                                    <h6>{% for error in formulario.codigo_postal.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</h6>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th> Facturación mensual:</th>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <p>{{ formulario.factura_mensual }}</p>
+                                    <h6>{% for error in formulario.factura_mensual.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</h6>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <th></th>
+                                <td>&nbsp;</td>                                
+                                <td>
+                                {% for error in formulario.get_matricula_errors %}
+                                    <p style="color:red"> {{error.0 | escape}} </p> 
+                                {% endfor %}
+                                </td>                                
+                            </tr>                          
+                            <tr>
+                                <th> Matrículas:</th>
+                                <td>&nbsp;</td>
+                               <!--  <td>
+
+                                <p>{{ formulario.instance.matriculas }}<p>
+                                    <small>{{ formulario.nueva_matricula }}</small>
+                                    <h6>{% for error in formulario.nueva_matricula_0.errors %}<p style="color:red"> &nbsp; {{ error|escape }}</p>{% endfor %}</h6>
+                                </td> -->
+                                
+                                <td>                                                 
+                                    {%for field in formulario.get_matricula_fields %}
+                                           {{field.0}}
+                                       
+                                    {%endfor%}
+
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div align="center">
+                        <a class="btn btn-primary" onclick="barra_botones('salvar');"
+                           role="button">Guardar</a>
+                    </div>
+                    &nbsp;
+                </div>
+
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+            <!--</div>-->
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </form>
+</section>
+<!-- /.content -->
+<script>
+    $(document).ready(
+        $(".matricula_input_new").on("input",function(){
+            let $this = $(this);
+            let  $clone = $this.clone();
+            let  name = $clone.attr('name');
+            let  n = parseInt(name.split('_')[2]) + 1;
+           
+            name = 'nueva_matricula_' + n
+            
+            $clone.val('')
+            $clone.attr('name', 'nueva_matricula_' + n)
+            $clone.attr('id', 'id_nueva_matricula_' + n)
+            $clone.addClass('matricula_dinamica')
+            $clone.appendTo($this.parent())
+            
+            $this.removeClass('matricula_input_new')
+            $this.off('input', arguments.callee)
+            $clone.on('input', arguments.callee)
+
+        })
+        
+    )
+
+</script>
+
+{% endblock%}
+

@@ -1,0 +1,210 @@
+{% extends "backoffice/base.html"%}
+
+{% block contenido_ppal%}
+
+<script>
+    $(document).ready(function () {
+        var json_datos = "{{datos|escapejs}}";
+
+        if (json_datos === '')
+            return;
+
+        var datos = JSON.parse(json_datos);
+
+        function deg2rad(deg) {
+            return deg * (Math.PI / 180)
+        }
+
+        function obtener_distancia(lat1, lng1, lat2, lng2) {
+
+            var R = 6371;
+
+            lat1 = deg2rad(lat1);
+            lng1 = deg2rad(lng1);
+            lat2 = deg2rad(lat2);
+            lng2 = deg2rad(lng2);
+
+            var dlon = lng2 - lng1;
+            var dlat = lat2 - lat1;
+
+            var a =
+                Math.sin(dlat / 2) * Math.sin(dlat / 2) +
+                Math.cos(lat1) * Math.cos(lat2) *
+                Math.sin(dlon / 2) * Math.sin(dlon / 2);
+
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+            return parseInt(R * c); // Distance in km
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                // Get the coordinates of the current possition.
+                var lat1 = position.coords.latitude;
+                var lng1 = position.coords.longitude;
+
+                var nuevos_datos = datos.map(function (dato) {
+                    var lat2 = dato.geo_latitud;
+                    var lng2 = dato.geo_longitud;
+                    dato.distancia = obtener_distancia(lat1, lng1, lat2, lng2);
+                    return dato;
+                });
+
+                nuevos_datos.sort(function (first, second) {
+                    return first.distancia - second.distancia;
+                });
+
+                var estacion_mas_cerca = nuevos_datos[0];
+
+                $('.estacion_cercana_nombre').text(estacion_mas_cerca.nombre).attr("href", "/estaciones/ver/?dato_id=" + estacion_mas_cerca.id);
+                $('.estacion_cercana_direccion').text(estacion_mas_cerca.direccion);
+                $('.estacion_cercana_provincia').text(estacion_mas_cerca.provincia);
+                $('.estacion_cercana_distancia').text(estacion_mas_cerca.distancia + ' km');
+
+                for (i in estacion_mas_cerca.precios) {
+                    var precio = estacion_mas_cerca.precios[i];
+                    $('.estacion_cercana_' + precio.combustible).text(precio.precio);
+                }
+
+                var origen = lat1 + ',' + lng1;
+                var destino = estacion_mas_cerca.geo_latitud + ',' + estacion_mas_cerca.geo_longitud;
+
+                var url = "https://www.google.com/maps/dir/?api=1&origin=" + origen + "&destination=" + destino + "&travelmode=driving";
+                $("#googlemaps_camino").attr("href", url);
+            });
+        }
+    });
+</script>
+
+<!-- Main content -->
+<section class="content">
+    {% if usuario.es_admin %}
+    <div class="row">
+        <div class="col-xs-12">
+
+            <div class="box">
+                <div class="box-body">
+                    <h3>Seleccione una opción del menú de la izquierda.</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="box box-primary">
+                <h4 align="center">Datos de usuario</h4>
+                <table class="table table-bordered table-hover">
+                    <tbody>
+                    <tr>
+                        <td>
+                            <h4>Nombre fiscal</h4>
+                            <h5>{{ usuario.nombre }} {{ usuario.apellidos }}</h5>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h4>Email</h4>
+                            <h5>{{ usuario.email }}</h5>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h4>Código postal</h4>
+                            <h5>{{ usuario.codigo_postal }}</h5>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h4>Provincia</h4>
+                            <h5>{{ usuario.provincia }}</h5>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h4>Localidad</h4>
+                            <h5>{{ usuario.localidad }}</h5>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h4>Dirección</h4>
+                            <h5>{{ usuario.direccion }}</h5>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h4>Teléfono</h4>
+                            <h5>{{ usuario.telefono }}</h5>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h4>Matrículas</h4>
+                            <h5>{{ usuario.matriculas }}</h5>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="box box-primary">
+                <h4 align="center">Facturas</h4>
+                <table class="table table-bordered table-hover">
+                    <tbody>
+                    <tr>
+                        <td>
+                            <h4>Tipo factura</h4>
+                            <h5>{{ usuario.facturacion|title }}</h5>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="box box-primary">
+                <div class="box-header with-border" align="center">
+                    <div align="center">
+                        <a class="btn btn-primary" href="/estaciones/ver_mapa" role="button">
+                            <i class="fa fa-map-marker"></i>
+                            <p>Ver Mapa</p>
+                        </a>
+                    </div>
+                    <h3>Estación más cercana</h3>
+                    <h4><a class="estacion_cercana_nombre" role="button"></a></h4>
+                    <h5 class="estacion_cercana_direccion"></h5>
+                    <h5 class="estacion_cercana_provincia"></h5>
+                    <h6 class="estacion_cercana_distancia"></h6>
+                </div>
+                <div class="box-body">
+                    {% for combustible in combustibles %}
+                    <div align="center">
+                        <div class="box box-info" style="width: 150px">
+                            <div class="box-body bg-black color-palette" style="width: 150px">
+                                <h5>{{combustible.nombre|title}}</h5>
+                                <h2 class="estacion_cercana_{{combustible.id}}"></h2>
+                            </div>
+                        </div>
+                        <!-- /.box -->
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="box-footer with-border" align="center">
+                    <a id="googlemaps_camino" class="btn btn-primary" href="/estaciones/ver_mapa" role="button">
+                        <i class="fa fa-map-marker"></i>
+                        <p>&nbsp;&nbsp;&nbsp;Ir&nbsp;&nbsp;&nbsp;</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.box -->
+    <!-- /.col -->
+    </div>
+    {% endif %}
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+
+{% endblock%}
+

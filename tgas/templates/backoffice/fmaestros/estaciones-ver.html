@@ -1,0 +1,118 @@
+{% extends "backoffice/base.html"%}
+
+{% block contenido_ppal%}
+
+<script>
+    $(document).ready(function () {
+        function deg2rad(deg) {
+            return deg * (Math.PI / 180)
+        }
+
+        function obtener_distancia(lat1, lng1, lat2, lng2) {
+
+            var R = 6371;
+
+            lat1 = deg2rad(lat1);
+            lng1 = deg2rad(lng1);
+            lat2 = deg2rad(lat2);
+            lng2 = deg2rad(lng2);
+
+            var dlon = lng2 - lng1;
+            var dlat = lat2 - lat1;
+
+            var a =
+                Math.sin(dlat / 2) * Math.sin(dlat / 2) +
+                Math.cos(lat1) * Math.cos(lat2) *
+                Math.sin(dlon / 2) * Math.sin(dlon / 2);
+
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+            return parseInt(R * c); // Distance in km
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                // Get the coordinates of the current possition.
+                var lat1 = position.coords.latitude;
+                var lng1 = position.coords.longitude;
+                var lat2 = parseFloat('{{estacion.geo_latitud}}'.replace(',', '.'));
+                var lng2 = parseFloat('{{estacion.geo_longitud}}'.replace(',', '.'));
+
+                var distancia = obtener_distancia(lat1, lng1, lat2, lng2);
+
+                $('.distancia').text(distancia + ' km');
+
+                var origen = lat1 + ',' + lng1;
+                var destino = lat2 + ',' + lng2;
+
+                var url = "https://www.google.com/maps/dir/?api=1&origin=" + origen + "&destination=" + destino + "&travelmode=driving"
+                $("#googlemaps_camino").attr("href", url);
+            });
+        }
+    });
+</script>
+
+<!-- Main content -->
+<section class="content">
+    {% if usuario.es_admin %}
+    <div class="row">
+        <div class="col-xs-12">
+
+            <div class="box">
+                <div class="box-body">
+                    <h3>Seleccione una opción del menú de la izquierda.</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div align="center">
+        <a class="btn btn-primary" href="/estaciones/ver_mapa?dato_id={{ estacion.id }}" role="button">
+            <i class="fa fa-map-marker"></i>
+            <p>Ver en Mapa</p>
+        </a>
+    </div>
+    &nbsp;
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <div class="box box-primary">
+                <div class="box-header with-border" align="center">
+                    <h3> {{ estacion.nombre }} </h3>
+                    <h4> {{ estacion.direccion }} </h4>
+                    <h4>{{estacion.provincia}}</h4>
+                    <h5 class="distancia"></h5>
+                </div>
+                <div class="box-body">
+                    {% for precio in estacion.precios %}
+                    <div align="center">
+                        <div class="box box-info" style="width: 150px">
+                            <div class="box-body bg-black color-palette" style="width: 150px">
+                                <h5>{{precio.combustible.nombre|title}}</h5>
+                                <h2> {{ precio }} </h2>
+                            </div>
+                        </div>
+                        <!-- /.box -->
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="box-footer with-border" align="center">
+                    <a id="googlemaps_camino" class="btn btn-primary" href="/estaciones/ver_mapa" role="button">
+                        <i class="fa fa-map-marker"></i>
+                        <p>&nbsp;&nbsp;&nbsp;Ir&nbsp;&nbsp;&nbsp;</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+    <!-- /.box -->
+    <!-- /.col -->
+    </div>
+    {% endif %}
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+
+{% endblock%}
+

@@ -1,0 +1,67 @@
+{% extends "backoffice/base.html"%}
+
+{% block contenido_ppal%}
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="col-xs-12">
+
+          <div class="box">
+            <div class="box-body">
+<!--
+    nombre = models.CharField(max_length=60, unique=True)
+    razon_social = models.CharField(max_length=60, null=True, blank=True)
+    cif = models.CharField(max_length=16, null=True, blank=True)
+    cp = models.CharField(max_length=11, null=True, blank=True)
+    direccion =  models.CharField(max_length=70, null=True, blank=True)
+    poblacion = models.CharField(max_length=70, null=True, blank=True)
+    provincia = models.CharField(max_length=70, null=True, blank=True)
+    telefono = models.CharField(max_length=70, null=True, blank=True)
+    pais = models.CharField(max_length=70, null=True, blank=True)
+    observaciones = models.TextField(null=True, blank=True)
+    empresa_principal = models.ForeignKey(EmpresaPrincipal)
+
+-->
+              <table id="tlistados1" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>CIF</th>
+                </tr>
+                </thead>
+                <tbody>
+
+{% for dato in l_datos%}
+                <tr>
+                    <td> <a href="/empresas/edit/?dato_id={{ dato.id}}">{{ dato.razon_social }}</a></td>
+                    <td> {{ dato.cif }}</td>
+                </tr>
+{%endfor%}
+
+                </tbody>
+                  <!-- TFOOT ............
+                <tfoot>
+                <tr>
+                  <th>Delegación</th>
+                  <th>Emplazamiento</th>
+                </tr>
+                </tfoot>
+                -->
+              </table>
+
+
+
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+
+
+{% endblock%}

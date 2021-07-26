@@ -1,0 +1,13 @@
+
+.idea/
+*.log
+*.db
+*.pyc
+*.pyo
+*.jpg
+*.jpeg
+*.png
+*.svg
+*.xls
+*.docx
+

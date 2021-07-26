@@ -1,0 +1,52 @@
+{% extends "backoffice/base.html"%}
+
+{% block contenido_ppal%}
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="col-xs-12">
+
+          <div class="box">
+            <div class="box-body">
+<!--
+    codigo = models.CharField(max_length=16, unique=True)
+    nombre = models.CharField(max_length=60, unique=True)
+
+    observaciones = models.TextField(null=True, blank=True)
+
+-->
+              <table id="tlistados1" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Nombre</th>
+                </tr>
+                </thead>
+                <tbody>
+
+{% for dato in l_datos%}
+                <tr>
+                    <td> <a href="/cuentas/edit/?dato_id={{ dato.id}}">{{ dato.codigo }}</a></td>
+                    <td> {{ dato.nombre }}</td>
+                </tr>
+{%endfor%}
+
+                </tbody>
+             </table>
+
+
+
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+
+
+{% endblock%}

@@ -1,0 +1,67 @@
+{% extends "backoffice/base.html"%}
+
+{% block contenido_ppal%}
+<script>
+    $(document).ready(function () {
+            $("#tfacturas").DataTable({
+                "language": {
+                    "url": "/static/backoffice/plugins/datatables/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "order": [[0, "asc"]],
+                "bPaginate": true,
+                "bFilter": false,
+                "bInfo": false,
+                "columnDefs": [
+                    {className: "text-left", "targets": [0, 1]},
+                    {className: "text-right", "targets": [2]},
+                    {className: "text-center", "targets": [3]},
+                    {targets: [2], type: 'moneda'}
+                ]
+            });
+        }
+    );
+</script>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-body" style="overflow:auto">
+                    <form name="formppal" id="formppal" action="" method="post"
+                          onsubmit="pagina_recargada(); proceso_llamado();">{% csrf_token %}
+                        <p align="center"> {{ formulario.mes }} {{ formulario.ano }} </p>
+                    </form>
+                    <table id="tfacturas" class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Código</th>
+                            <th>Importe</th>
+                            <th>Factura</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for dato in facturas%}
+                        <tr>
+                            {% if dato.es_mensual %}
+                            <td> {{ dato.fecha_creacion|date:"D d" }}</td>
+                            {% else %}
+                            <td> {{ dato.fecha_creacion|date:"D d" }} a las {{ dato.fecha_creacion|time:"H:i" }}</td>
+                            {% endif %}
+                            <td> {{ dato.codigo }}</td>
+                            <td> {{ dato.importe }}€</td>
+                            <td><a href="/facturas/download/?dato_id={{dato.id}}"><i class="fa fa-download"></i></a></td>
+                        </tr>
+                        {%endfor%}
+                        </tbody>
+                    </table>
+                </div>            <!-- /.box-body -->
+            </div>          <!-- /.box -->
+        </div>        <!-- /.col -->
+    </div>      <!-- /.row -->
+</section>    <!-- /.content -->
+
+
+{% endblock%}
+    
